@@ -32,14 +32,21 @@ def plot_surface_3d(objective: Objective, bounds: Bounds, grid_size: int = 200, 
     return fig, ax
 
 
-def overlay_trajectory(ax, trajectory: np.ndarray, objective: Objective | None = None, every: int = 1):
+def overlay_trajectory(ax, trajectory: np.ndarray, objective: Objective | None = None, every: int = 1, points_only: bool = False):
     """Prekreslí na povrch trajektóriu (poradie navštívených bodov)."""
     xyz = trajectory[:, :2]
     if objective is not None:
         z = np.apply_along_axis(objective, 1, xyz)
     else:
         z = np.arange(xyz.shape[0])
-    ax.plot(xyz[::every, 0], xyz[::every, 1], z[::every], marker=".", color="k", linewidth=0.5, markersize=3, alpha=0.5)
+    
+    if points_only:
+        # Zobraz len body bez čiar
+        ax.scatter(xyz[::every, 0], xyz[::every, 1], z[::every], color="k", s=3, alpha=0.5)
+    else:
+        # Pôvodné správanie - body s čiarami
+        ax.plot(xyz[::every, 0], xyz[::every, 1], z[::every], marker=".", color="k", linewidth=0.5, markersize=3, alpha=0.5)
+    
     if objective is not None:
         best_idx = int(np.argmin(z))
         ax.scatter([xyz[best_idx, 0]], [xyz[best_idx, 1]], [z[best_idx]], color="black", s=40)

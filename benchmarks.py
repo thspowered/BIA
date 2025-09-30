@@ -88,14 +88,14 @@ def zakharov(x: np.ndarray) -> float:
 RECOMMENDED_DOMAINS: Dict[str, Tuple[float, float]] = {
     # Veľa lokálnych miním
     "ackley": (-32.768, 32.768),
-    "griewank": (-600.0, 600.0),
+    "griewank": (-4.0, 4.0),
     "levy": (-10.0, 10.0),
     "rastrigin": (-5.12, 5.12),
     "schwefel": (-500.0, 500.0),
     # Misa (bowl-shaped)
     "sphere": (-5.12, 5.12),
     # Doskovitý tvar (plate-shaped)
-    "zakharov": (-5.0, 10.0),
+    "zakharov": (-10.0, 10.0),
     # Údolie (valley-shaped)
     "rosenbrock": (-2.048, 2.048),
     # Strmé hrany/pády

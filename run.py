@@ -81,7 +81,8 @@ def create_all_functions_grid(iters: int, seed: int, elev: int, azim: int, save_
         xyz = result.trajectory[:, :2]
         z = np.apply_along_axis(objective, 1, xyz)
         every = max(1, iters // 1000)
-        ax.plot(xyz[::every, 0], xyz[::every, 1], z[::every], marker=".", color="k", linewidth=0.5, markersize=2, alpha=0.7)
+        # Pre blind search zobraz len body bez čiar
+        ax.scatter(xyz[::every, 0], xyz[::every, 1], z[::every], color="k", s=2, alpha=0.7)
         mark_best(ax, result.best_point, objective)
         
         ax.set_title(f"{func_name.capitalize()}\n(best={result.best_value:.4f})", fontsize=10)
@@ -147,7 +148,7 @@ def main():
         return
 
     fig, ax = plot_surface_3d(objective, bounds, elev=args.elev, azim=args.azim)
-    overlay_trajectory(ax, result.trajectory, objective, every=max(1, args.iters // 2000))
+    overlay_trajectory(ax, result.trajectory, objective, every=max(1, args.iters // 2000), points_only=True)
     mark_best(ax, result.best_point, objective)
     fig.suptitle(f"Blind Search on {key} (best={result.best_value:.4f})")
     fig.tight_layout()
