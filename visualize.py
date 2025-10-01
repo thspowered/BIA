@@ -11,8 +11,12 @@ Objective = Callable[[np.ndarray], float]
 Bounds = Sequence[Tuple[float, float]]
 
 
-def plot_surface_3d(objective: Objective, bounds: Bounds, grid_size: int = 200, elev: int = 35, azim: int = -60):
-    """Vypočíta a vykreslí 3D povrch funkcie nad 2D mriežkou v daných hraniciach."""
+def plot_surface_3d(objective: Objective, bounds: Bounds, grid_size: int = 200, elev: int = 35, azim: int = -60, ax: Axes3D | None = None):
+    """Vypočíta a vykreslí 3D povrch.
+
+    Ak je poskytnutý `ax`, kreslí do neho a vráti `(ax.figure, ax)`. Ak nie je,
+    vytvorí nový obrázok a os.
+    """
     x_lin = np.linspace(bounds[0][0], bounds[0][1], grid_size)
     y_lin = np.linspace(bounds[1][0], bounds[1][1], grid_size)
     X, Y = np.meshgrid(x_lin, y_lin)
@@ -21,8 +25,11 @@ def plot_surface_3d(objective: Objective, bounds: Bounds, grid_size: int = 200, 
         pts = np.stack([X[i], Y[i]], axis=1)
         Z[i] = np.apply_along_axis(objective, 1, pts)
 
-    fig = plt.figure(figsize=(9, 7))
-    ax = fig.add_subplot(111, projection="3d")
+    if ax is None:
+        fig = plt.figure(figsize=(9, 7))
+        ax = fig.add_subplot(111, projection="3d")
+    else:
+        fig = ax.figure
     # Nižšia opacita (alpha) pre lepšiu čitateľnosť trajektórie a značiek
     ax.plot_surface(X, Y, Z, rstride=3, cstride=3, cmap="coolwarm", linewidth=0.2, alpha=0.4)
     ax.view_init(elev=elev, azim=azim)
