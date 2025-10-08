@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Callable, Sequence, Tuple
+from hill_climbing import clip_to_bounds
 
 import numpy as np
 
@@ -29,13 +30,6 @@ class SAResult:
     values: np.ndarray      # shape: (iterations,)
     # Teploty v každej iterácii
     temperatures: np.ndarray  # shape: (iterations,)
-
-
-def clip_to_bounds(x: np.ndarray, bounds: Bounds) -> np.ndarray:
-    """Oseká vektor na dané hranice po jednotlivých súradniciach."""
-    low = np.array([b[0] for b in bounds], dtype=float)
-    high = np.array([b[1] for b in bounds], dtype=float)
-    return np.clip(x, low, high)
 
 
 def simulated_annealing(
