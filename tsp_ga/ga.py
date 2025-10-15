@@ -45,7 +45,7 @@ class GeneticAlgorithmTSP:
         # Minimalizačný problém: fitness je dĺžka okruhu (čím menšie, tým lepšie)
         return [self.fitness_fn(ind) for ind in population]
 
-    # --- selekcia: turnaj ---
+    # --- selekcia ---
     def _tournament(self, population: List[List[int]], scores: List[float]) -> List[int]:
         k = self.cfg.tournament_size
         participants = random.sample(range(len(population)), k)
