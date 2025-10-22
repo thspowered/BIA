@@ -1,14 +1,3 @@
-"""Optimalizátor Differential Evolution (DE/rand/1/bin).
-
-Implementácia kopíruje pseudokód z prednášky:
-    - populácia reálnych vektorov sa vyvíja pomocou diferenciálnej mutácie
-    - mutačný vektor v = x_r1 + F * (x_r2 - x_r3)
-    - binomálne kríženie s garanciou aspoň jednej mutantnej zložky
-    - chamtivý výber medzi cieľovým vektorom a trial vektorom
-
-Funkcia ukladá kompletnú históriu populácie, aby bolo možné neskôr vizualizovať
-proces hľadania (napr. na povrchovom grafe v 2D).
-"""
 from __future__ import annotations
 
 from dataclasses import dataclass
