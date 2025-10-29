@@ -77,37 +77,48 @@ def particle_swarm_optimization(objective: Objective, bounds: Bounds, config: PS
     best_curve = [global_best_value]
 
     for _ in range(cfg.iterations):
-        r1 = rng.random(size=(cfg.population_size, dims))
-        r2 = rng.random(size=(cfg.population_size, dims))
+        r1 = rng.random(size=(cfg.population_size, dims))  # náhodné čísla pre kognitívnu zložku
+        r2 = rng.random(size=(cfg.population_size, dims))  # náhodné čísla pre sociálnu zložku
 
+        # KOGNITÍVNA ZLOŽKA - ťahá časticu k jej osobnej najlepšej pozícii
         cognitive_term = cfg.cognitive_coef * r1 * (personal_best_positions - positions)
+        
+        # SOCIÁLNA ZLOŽKA - ťahá časticu k globálnej najlepšej pozícii
         social_term = cfg.social_coef * r2 * (global_best_point - positions)
 
+        # AKTUALIZÁCIA RÝCHLOSTI - PSO rovnica
         velocities = cfg.inertia_weight * velocities + cognitive_term + social_term
 
+        # OBRANIE RÝCHLOSTI - zabráni príliš rýchlemu pohybu častíc
         if cfg.velocity_clamp is not None:
-            max_abs = abs(cfg.velocity_clamp)
-            velocities = np.clip(velocities, -max_abs, max_abs)
+            max_abs = abs(cfg.velocity_clamp)  # maximálna absolútna hodnota rýchlosti
+            velocities = np.clip(velocities, -max_abs, max_abs)  # obmedzenie rýchlosti
 
+        # AKTUALIZÁCIA POZÍCIE - častice sa posunú podľa svojej rýchlosti
         positions = positions + velocities
+        # UDRŽANIE V HRANICIACH
         positions = np.clip(positions, low, high)
 
+        # VÝPOČET FITNESS - hodnotenie nových pozícií častíc
         fitness = np.apply_along_axis(objective, 1, positions)
 
-        improved = fitness < personal_best_values
-        if np.any(improved):
-            personal_best_positions[improved] = positions[improved]
-            personal_best_values[improved] = fitness[improved]
+        # AKTUALIZÁCIA OSOBNÝCH NAJLEPŠÍCH POZÍCIÍ
+        improved = fitness < personal_best_values  
+        if np.any(improved):  
+            personal_best_positions[improved] = positions[improved]  
+            personal_best_values[improved] = fitness[improved]  
 
-        best_idx = int(np.argmin(personal_best_values))
-        if personal_best_values[best_idx] < global_best_value:
-            global_best_value = float(personal_best_values[best_idx])
-            global_best_point = personal_best_positions[best_idx].copy()
+        # AKTUALIZÁCIA GLOBÁLNEJ NAJLEPŠEJ POZÍCIE
+        best_idx = int(np.argmin(personal_best_values))  # nájdi index najlepšej častice
+        if personal_best_values[best_idx] < global_best_value:  # ak je lepšia ako globálna
+            global_best_value = float(personal_best_values[best_idx])  # aktualizuj globálnu hodnotu
+            global_best_point = personal_best_positions[best_idx].copy()  # aktualizuj globálnu pozíciu
 
-        pos_history.append(positions.copy())
-        vel_history.append(velocities.copy())
-        fit_history.append(fitness.copy())
-        best_curve.append(global_best_value)
+        # ULOŽENIE HISTÓRIE 
+        pos_history.append(positions.copy())  # pozície všetkých častíc
+        vel_history.append(velocities.copy())  # rýchlosti všetkých častíc
+        fit_history.append(fitness.copy())  # fitness všetkých častíc
+        best_curve.append(global_best_value)  # najlepšia hodnota v tejto iterácii
 
     return PSOResult(
         best_point=global_best_point,
