@@ -74,8 +74,8 @@ def main() -> None:
 
     result = soma_all_to_one(objective, bounds, config=cfg)
 
-    print(f"Najlepšia hodnota: {result.best_value:.6f}")
-    print(f"Najlepší bod: {np.array2string(result.best_point, precision=4)}")
+    #print(f"Najlepšia hodnota: {result.best_value:.6f}")
+    #print(f"Najlepší bod: {np.array2string(result.best_point, precision=4)}")
 
     if args.no_plot or args.dims != 2:
         if args.dims != 2:

@@ -51,7 +51,6 @@ def soma_all_to_one(objective: Objective, bounds: Bounds, config: SOMAConfig | N
     """Spustí SOMA v režime All-to-One."""
     cfg = config or SOMAConfig()
 
-    # Základná validácia vstupných parametrov algoritmu
     if cfg.population_size < 2:
         raise ValueError("population_size musí byť minimálne 2.")
     if cfg.iterations <= 0:
@@ -96,7 +95,7 @@ def soma_all_to_one(objective: Objective, bounds: Bounds, config: SOMAConfig | N
 
         for i in range(cfg.population_size):
             if i == leader_idx:
-                continue  # líder nemigruje
+                continue  # líder skip
 
             # PRT maska určuje, ktoré dimenzie migranta sa budú hýbať
             prt_mask = _generate_prt_mask(rng, dims, cfg.prt)
