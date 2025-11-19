@@ -62,7 +62,6 @@ class AntColonyTSP:
         desirability = tau * eta
         total = np.sum(desirability)
         if total <= 0.0 or np.isnan(total):
-            # fallback: uniformné rozdelenie
             return np.full(len(allowed), 1.0 / len(allowed))
         return desirability / total
 
@@ -116,10 +115,10 @@ class AntColonyTSP:
                     best_length = length
                     best_tour = tour.copy()
 
-            # Vyparovanie feromónu
+            # Vyparovanie feromónu pre kazdu cestu
             pheromone *= (1.0 - cfg.evaporation)
 
-            # Ukladanie feromónu podľa kvality trás
+            # Ukladanie feromónu podľa kvality trás cim mensia trasa tym vacsi feromon
             for tour, length in zip(tours, lengths):
                 deposit = cfg.q / length if length > 0 else 0.0
                 for i in range(self.n):
